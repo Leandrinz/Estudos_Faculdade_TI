@@ -1,4 +1,4 @@
-# TEORIA DO CONSUMIDOR_DEMANDA
+# TEORIA DO CONSUMIDOR
 Esse conteúdo se encontra no capítulo 3 do livro
 
 ## **3.1 Preferências do Consumidor (Página 67):**
