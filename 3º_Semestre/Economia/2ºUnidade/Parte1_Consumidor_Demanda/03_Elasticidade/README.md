@@ -19,13 +19,13 @@ Ep = (%ΔQ) / (%ΔP) = (ΔQ/ΔP) × (P/Q)
 
 > A elasticidade-preço é **sempre negativa** (preço sobe → quantidade cai). Trabalha-se com o **valor absoluto** para classificar.
 
-| |Ep| | Classificação | O que significa |
-|---|---|---|
-| > 1 | **Elástica** | Q varia mais que proporcionalmente ao preço |
-| = 1 | **Unitária** | Q varia na mesma proporção que o preço |
-| < 1 | **Inelástica** | Q varia menos que proporcionalmente ao preço |
-| = 0 | **Perfeitamente inelástica** | Q não varia com o preço (curva vertical) |
-| → ∞ | **Perfeitamente elástica** | Qualquer variação de preço → demanda vai a zero (curva horizontal) |
+| Ep   | Classificação                | O que significa                                                          |
+|------|------------------------------|---------------------------------------------------------------------------|
+| > 1  | **Elástica**                 | Q varia mais que proporcionalmente ao preço                              |
+| = 1  | **Unitária**                 | Q varia na mesma proporção que o preço                                   |
+| < 1  | **Inelástica**               | Q varia menos que proporcionalmente ao preço                             |
+| = 0  | **Perfeitamente inelástica** | Q não varia com o preço (curva vertical)                                 |
+| → ∞  | **Perfeitamente elástica**   | Qualquer variação de preço → demanda vai a zero (curva horizontal)       |
 
 > 💡 **Exemplo prático:** O preço da passagem de ônibus sobe 20% e a quantidade de passageiros cai apenas 5%. Como |Ep| = 5/20 = 0,25 < 1, a demanda é **inelástica** — faz sentido, pois muitas pessoas não têm alternativa e precisam usar o ônibus de qualquer forma.
 
