@@ -32,6 +32,12 @@ No curto prazo, a limitação física da empresa (Capital fixo) obriga a dividir
   - **Custo Fixo Médio ($CFMe$):** O custo fixo dividido pela produção ($CF / q$). É sempre decrescente: conforme a produção aumenta, o custo fixo é "diluído" por mais unidades (Efeito de Diluição).
   - **Custo Variável Médio ($CVMe$):** O custo variável dividido pelo nível de produção ($CV / q$).
 - **📊 3. O Formato das Curvas de Custo (Análise Gráfica)**: Ao analisar o comportamento gráfico das curvas de custos unitários no curto prazo, existem três regras de ouro fundamentais para os testes:
+
+    Exemplo de curvas:
+
+    ![alt text](image.png)
+
+
     - A curva de $CFMe$ desce continuamente aproximando-se do eixo horizontal, provando a diluição do custo fixo.
     - A curva de Custo Marginal ($CMg$) corta as curvas de Custo Total Médio ($CTMe$) e Custo Variável Médio ($CVMe$) exatamente nos seus pontos de **mínimo**.
     - **A Relação de Tração:** Se o Custo Marginal estiver abaixo da média, ele "puxa" a média para baixo (a média decresce). Se o Custo Marginal estiver acima da média, ele "puxa" a média para cima (a média cresce).
