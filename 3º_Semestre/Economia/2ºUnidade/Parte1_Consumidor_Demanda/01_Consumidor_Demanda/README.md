@@ -56,6 +56,9 @@ E isso viola nossa premissa de transitividade. Pois se A é indiferente a B e D,
 
 ### **Taxa marginal de substituição (TMS)**:
   - Quantidade máxima de um bem que um consumidor está disposto a deixar de consumir para obter uma unidade adicional de um outro bem
+  - Formato da curva:
+  
+    ![alt text](image.png)
 
 ### **Substitutos perfeitos e complementos perfeitos:**
 
