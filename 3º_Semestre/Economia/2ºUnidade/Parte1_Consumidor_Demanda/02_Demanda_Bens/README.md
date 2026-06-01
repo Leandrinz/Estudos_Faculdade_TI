@@ -100,7 +100,7 @@ Qmercado = QA + QB + QC + ...
 | = 1 | Unitária | Receita não muda |
 | < 1 | Inelástica | Receita ↑ |
 
-**Resolvendo pelo estilo da tabela da professora:**
+**Resolvendo exemplo:**
 
 | Preço ($) | Demanda | Oferta |
 |---|---|---|
