@@ -44,6 +44,7 @@ Exemplo:
 ![alt text](image-1.png)
 
 - **Taxa Marginal de Substituição Técnica (TMST):** É a quantidade de Capital que a empresa consegue reduzir quando uma unidade adicional de Trabalho é introduzida, de modo que o nível de produção permaneça constante:
+
 $$
 \text{TMST} = -\frac{\Delta K}{\Delta L} = \frac{PMg_L}{PMg_K}
 $$
