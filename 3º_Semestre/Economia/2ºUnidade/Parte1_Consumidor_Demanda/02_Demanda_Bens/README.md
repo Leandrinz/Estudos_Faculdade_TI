@@ -94,8 +94,8 @@ Qmercado = QA + QB + QC + ...
 εₚ = (ΔQ / Q) / (ΔP / P) = (ΔQ/ΔP) × (P/Q)
 ```
 
-| |εₚ| | Classificação | Receita quando P ↑ |
-|---|---|---|
+| \|εₚ\| | Classificação | Receita quando P ↑ |
+|----------|--------------|--------------------|
 | > 1 | Elástica | Receita ↓ |
 | = 1 | Unitária | Receita não muda |
 | < 1 | Inelástica | Receita ↑ |
