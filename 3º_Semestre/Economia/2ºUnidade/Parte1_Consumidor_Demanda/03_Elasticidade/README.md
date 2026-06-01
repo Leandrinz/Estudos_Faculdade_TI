@@ -46,10 +46,10 @@ Em uma curva de demanda linear (Q = a − bP), a inclinação é constante, mas 
 #### **Elasticidade e Receita Total**
 
 | Tipo | P sobe → Receita (P×Q) | P cai → Receita |
-|---|---|---|
-| Elástica (|Ep| > 1) | ↓ diminui | ↑ aumenta |
-| Unitária (|Ep| = 1) | não muda | não muda |
-| Inelástica (|Ep| < 1) | ↑ aumenta | ↓ diminui |
+|------|------------------------|-----------------|
+| Elástica (\|Ep\| > 1) | ↓ diminui | ↑ aumenta |
+| Unitária (\|Ep\| = 1) | não muda | não muda |
+| Inelástica (\|Ep\| < 1) | ↑ aumenta | ↓ diminui |
 
 > 💡 **Exemplo prático:** Uma farmácia vende insulina (demanda inelástica). Se ela aumentar o preço em 30%, a quantidade vendida cai pouco (digamos, 5%) pois os diabéticos precisam do medicamento. A receita **sobe**. Já uma loja de sorvetes (bem supérfluo, elástico) que aumentar o preço em 30% pode perder tantos clientes que a receita **cai**.
 
