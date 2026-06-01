@@ -137,6 +137,22 @@ Receita Total:  RT = P × Q
 Custo Total:    CT = CF + CVu × Q
 Lucro:          L  = RT − CT
 ```
+> RT -> Receita Total
+
+> Q -> Quantidade
+
+> P -> Preço
+
+> CT -> Custo total
+
+> CF -> Custo Fixo
+
+> CVu -> Custo Variável Unitário
+
+> L -> Lucro
+
+> Q* -> Quantidade no ponto de equilíbrio
+
 
 **Ponto de equilíbrio** (lucro = 0):
 ```
