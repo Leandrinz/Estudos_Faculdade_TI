@@ -20,7 +20,8 @@ No curto prazo, a limitação física da empresa (Capital fixo) obriga a dividir
 - **🧮 1. Os Custos Totais e suas Divisões**:
   - **Custo Fixo ($CF$):** Custo que não varia com o nível de produção da empresa. Ele existe mesmo se a produção for igual a zero.
   - **Custo Variável ($CV$):** Custo que se altera diretamente conforme o volume de produção ($q$) se modifica.
-  - **Custo Total ($CT$):** É a soma de todas as despesas da firma:$$CT = CF + CV$$
+  - **Custo Total ($CT$):** É a soma de todas as despesas da firma:
+  $$CT = CF + CV$$
   - > **Aplicação Prática:** A Editora de Livros possui custos de infraestrutura e arrendamento gráfico estipulados em 6.000€ fixos, e gasta 14€ em insumos (papel, tinta, direitos de autor) por cada livro impresso.
   - > **Explicação:** O $CF$ da editora é 6.000€ (mesmo que não imprima nenhum livro este mês, o arrendamento do galpão tem de ser pago). O $CV$ é dinâmico: se imprimir 100 livros, o custo variável será de $14 \times 100 = 1.400€$. Se a meta for produzir uma tiragem ($q$) de 500 livros, a equação do Custo Total será:
    $$CT = 6.000 + 14(500) = 6.000 + 7.000 = 13.000€$$
