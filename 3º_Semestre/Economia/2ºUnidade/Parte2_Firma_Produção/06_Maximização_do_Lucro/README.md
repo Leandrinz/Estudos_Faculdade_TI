@@ -107,6 +107,7 @@ $$
 \pi = RT - CT
 
 $$
+
 Onde:
 
 | Símbolo | Significado     |
