@@ -13,8 +13,9 @@ public class Jokenpo {
         int escolhaJogador;
         int totalVitorias = 0;
         int totalDerrotas = 0;
+        int partidas = 0;
 
-        while (true) {
+        while (partidas < 11) {
             System.out.println("==========================");
             System.out.println("JOKENPO");
             System.out.println("==========================");
@@ -29,42 +30,41 @@ public class Jokenpo {
 
             if (escolhaJogador == 0 && escolhaMaquina == 1){
                 totalDerrotas++;
-                System.out.println("Vitória da máquina!!!");
+                partidas++;
                 System.out.println("Escolha da máquina -> "+ escolha[escolhaMaquina]);
                 System.out.println("Sua escolha -> "+escolha[escolhaJogador]);
             }
             else if (escolhaJogador == 0 && escolhaMaquina == 2){
                 totalVitorias++;
-                System.out.println("Vitória do Jogador!!!");
+                partidas++;
                 System.out.println("Escolha da máquina -> "+ escolha[escolhaMaquina]);
                 System.out.println("Sua escolha -> "+escolha[escolhaJogador]);
             }
             else if (escolhaJogador == 1 && escolhaMaquina == 0){
                 totalVitorias++;
-                System.out.println("Vitória do Jogador!!!");
+                partidas++;
                 System.out.println("Escolha da máquina -> "+ escolha[escolhaMaquina]);
                 System.out.println("Sua escolha -> "+escolha[escolhaJogador]);
             }
             else if (escolhaJogador == 1 && escolhaMaquina == 2){
                 totalDerrotas++;
-                System.out.println("Vitória da máquina!!!");
+                partidas++;
                 System.out.println("Escolha da máquina -> "+ escolha[escolhaMaquina]);
                 System.out.println("Sua escolha -> "+escolha[escolhaJogador]);
             }
             else if (escolhaJogador == 2 && escolhaMaquina == 0){
                 totalDerrotas++;
-                System.out.println("Vitória da máquina!!!");
+                partidas++;
                 System.out.println("Escolha da máquina -> "+ escolha[escolhaMaquina]);
                 System.out.println("Sua escolha -> "+escolha[escolhaJogador]);
             }
             else if (escolhaJogador == 2 && escolhaMaquina == 1){
                 totalVitorias++;
-                System.out.println("Vitória do Jogador!!!");
+                partidas++;
                 System.out.println("Escolha da máquina -> "+ escolha[escolhaMaquina]);
                 System.out.println("Sua escolha -> "+escolha[escolhaJogador]);
             }
             else if (escolhaJogador == escolhaMaquina){
-                System.out.println("Empate!!!");
                 System.out.println("Escolha da máquina -> "+ escolha[escolhaMaquina]);
                 System.out.println("Sua escolha -> "+escolha[escolhaJogador]);
             }
@@ -75,9 +75,25 @@ public class Jokenpo {
             else{
                 System.out.println("Escolha inválida!!!");
             }
+            System.out.println("Partidas "+partidas+"/"+11);
             System.out.println("Total de Vitórias: "+totalVitorias);
             System.out.println("Total de Derrotas: "+totalDerrotas);
-
+        }
+        if (totalVitorias > totalDerrotas){
+            System.out.println(" ");
+            System.out.println("===================================");
+            System.out.println("VOCÊ VENCEU!!!!");
+            System.out.println("Total de Vitórias: "+totalVitorias);
+            System.out.println("Total de Derrotas: "+totalDerrotas);
+            System.out.println("===================================");
+        }
+        else if (totalDerrotas > totalVitorias){
+            System.out.println(" ");
+            System.out.println("===================================");
+            System.out.println("VOCÊ PERDEU!!!!");
+            System.out.println("Total de Vitórias: "+totalVitorias);
+            System.out.println("Total de Derrotas: "+totalDerrotas);
+            System.out.println("===================================");
         }
         input.close();
     }
