@@ -67,3 +67,6 @@ public static [tipoDoRetorno][nomeDaFuncao]([lista de parâmetros]){
 ```
 
 Se não vai retornar nada, o tipo é **void**
+
+## Recursão
+Fale um pouco
