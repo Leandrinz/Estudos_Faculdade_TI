@@ -17,6 +17,7 @@ public class Media {
         double media = media(d1, d2, d3);
 
         System.out.println("Média = "+media);
+        input.close();
     }
 
     public static double media (double d1, double d2, double d3){
