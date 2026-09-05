@@ -26,15 +26,6 @@ Modelo ER:
 
 Tabela resultante:
 
-```sql
-CREATE TABLE CLIENTE (
-    codigo    INT         PRIMARY KEY,
-    nome      VARCHAR(100) NOT NULL,
-    cpf       CHAR(11)     NOT NULL,
-    telefone  VARCHAR(20)
-);
-```
-
 | codigo | nome         | cpf         | telefone     |
 |--------|--------------|-------------|--------------|
 | 1      | Ana Souza    | 12345678900 | (84) 99999-1 |
@@ -71,20 +62,7 @@ Aqui, `DEPENDENTE` não tem sentido sozinho: "nome" só identifica um dependente
 1. A entidade forte gera sua tabela normalmente, com sua PK.
 2. A entidade fraca gera uma tabela cuja **chave primária é composta**: o identificador parcial da entidade fraca **+** a chave estrangeira que referencia a entidade forte.
 
-```sql
-CREATE TABLE FUNCIONARIO (
-    matricula INT PRIMARY KEY,
-    nome      VARCHAR(100)
-);
-
-CREATE TABLE DEPENDENTE (
-    matricula_funcionario INT,
-    nome                  VARCHAR(100),
-    data_nascimento       DATE,
-    PRIMARY KEY (matricula_funcionario, nome),
-    FOREIGN KEY (matricula_funcionario) REFERENCES FUNCIONARIO(matricula)
-);
-```
+Tabela resultante (DEPENDENTE):
 
 | matricula_funcionario | nome    | data_nascimento |
 |------------------------|---------|------------------|
@@ -115,29 +93,7 @@ Quando os dois lados do relacionamento têm cardinalidade máxima **N** (muitos 
                  (data_matricula, nota)
 ```
 
-```sql
-CREATE TABLE ALUNO (
-    ra    INT PRIMARY KEY,
-    nome  VARCHAR(100)
-);
-
-CREATE TABLE DISCIPLINA (
-    codigo INT PRIMARY KEY,
-    nome   VARCHAR(100)
-);
-
-CREATE TABLE MATRICULA (
-    ra_aluno       INT,
-    codigo_disciplina INT,
-    data_matricula DATE,
-    nota           DECIMAL(4,2),
-    PRIMARY KEY (ra_aluno, codigo_disciplina),
-    FOREIGN KEY (ra_aluno) REFERENCES ALUNO(ra),
-    FOREIGN KEY (codigo_disciplina) REFERENCES DISCIPLINA(codigo)
-);
-```
-
-Resultado: **3 tabelas** (uma para cada entidade + uma para o relacionamento).
+Resultado: **3 tabelas** (uma para cada entidade + uma para o relacionamento — chamada, por exemplo, MATRICULA — cuja chave primária é composta pelas chaves de ALUNO e DISCIPLINA).
 
 ---
 
@@ -158,19 +114,7 @@ Quando um dos lados do relacionamento tem cardinalidade máxima **1**, **não é
 ```
 Cada funcionário trabalha em **1** departamento; um departamento tem **N** funcionários → a cardinalidade máxima 1 está do lado de DEPARTAMENTO (quando visto a partir de FUNCIONARIO). Ou seja, é o lado **N (FUNCIONARIO)** que recebe a FK, pois cada funcionário só aponta para **um único** departamento.
 
-```sql
-CREATE TABLE DEPARTAMENTO (
-    codigo INT PRIMARY KEY,
-    nome   VARCHAR(100)
-);
-
-CREATE TABLE FUNCIONARIO (
-    matricula        INT PRIMARY KEY,
-    nome             VARCHAR(100),
-    codigo_departamento INT,
-    FOREIGN KEY (codigo_departamento) REFERENCES DEPARTAMENTO(codigo)
-);
-```
+Tabela resultante (FUNCIONARIO):
 
 | matricula | nome   | codigo_departamento |
 |-----------|--------|----------------------|
@@ -196,15 +140,7 @@ Quando a cardinalidade é **(1,1)** dos dois lados (ou seja, cada entidade se re
 └───────────┘                └───────────┘
 ```
 
-```sql
--- Opção: fundir tudo em uma única tabela
-CREATE TABLE PESSOA (
-    cpf              CHAR(11) PRIMARY KEY,
-    nome             VARCHAR(100),
-    numero_passaporte VARCHAR(20),
-    validade_passaporte DATE
-);
-```
+Tabela resultante (fundida):
 
 | cpf         | nome   | numero_passaporte | validade_passaporte |
 |-------------|--------|--------------------|-----------------------|
@@ -260,15 +196,7 @@ Todos os atributos (da superclasse e de **todas** as subclasses) são reunidos e
 
 **Melhor quando:** a hierarquia é pequena, com poucos atributos específicos por subclasse.
 
-```sql
-CREATE TABLE PESSOA (
-    cpf              CHAR(11) PRIMARY KEY,
-    nome             VARCHAR(100),
-    tipo             CHAR(1),          -- 'F' = Funcionario, 'C' = Cliente
-    salario          DECIMAL(10,2),    -- só preenchido se tipo = 'F'
-    limite_credito   DECIMAL(10,2)     -- só preenchido se tipo = 'C'
-);
-```
+Tabela resultante (PESSOA, com coluna `tipo` como discriminador: 'F' = Funcionário, 'C' = Cliente):
 
 | cpf | nome | tipo | salario | limite_credito |
 |-----|------|------|---------|------------------|
@@ -285,20 +213,6 @@ CREATE TABLE PESSOA (
 Não se cria tabela para a superclasse. Os atributos da superclasse são **duplicados** em cada tabela de subclasse.
 
 **Melhor quando:** a especialização é **total e disjunta** (toda pessoa é OU funcionário OU cliente, nunca as duas, e nunca nenhuma).
-
-```sql
-CREATE TABLE FUNCIONARIO (
-    cpf     CHAR(11) PRIMARY KEY,
-    nome    VARCHAR(100),
-    salario DECIMAL(10,2)
-);
-
-CREATE TABLE CLIENTE (
-    cpf            CHAR(11) PRIMARY KEY,
-    nome           VARCHAR(100),
-    limite_credito DECIMAL(10,2)
-);
-```
 
 **FUNCIONARIO**
 
@@ -322,25 +236,6 @@ CREATE TABLE CLIENTE (
 Cria-se uma tabela para a superclasse (com todos os atributos comuns) e uma tabela **para cada subclasse**, contendo apenas os atributos específicos + uma **chave estrangeira que também é chave primária** (referenciando a superclasse).
 
 **Melhor quando:** a especialização é **parcial** e/ou **sobreposta** (mais flexível — funciona em qualquer caso).
-
-```sql
-CREATE TABLE PESSOA (
-    cpf  CHAR(11) PRIMARY KEY,
-    nome VARCHAR(100)
-);
-
-CREATE TABLE FUNCIONARIO (
-    cpf     CHAR(11) PRIMARY KEY,
-    salario DECIMAL(10,2),
-    FOREIGN KEY (cpf) REFERENCES PESSOA(cpf)
-);
-
-CREATE TABLE CLIENTE (
-    cpf            CHAR(11) PRIMARY KEY,
-    limite_credito DECIMAL(10,2),
-    FOREIGN KEY (cpf) REFERENCES PESSOA(cpf)
-);
-```
 
 **PESSOA**
 
@@ -381,7 +276,7 @@ Alguns autores tratam como uma quarta variação a **junção parcial**: manter 
 | 2. Uma tabela por subclasse (sem tabela da superclasse)   | ✅ (ideal) | ❌ (duplica dados) | ❌ (perde "pessoas puras") | ❌ |
 | 3. Superclasse + subclasses com FK                        | ✅ | ✅ (ideal) | ✅ (ideal) | ✅ (ideal) |
 
-**Conclusão prática:** a **estratégia 3** (superclasse + subclasses ligadas por FK) é a mais usada no dia a dia, por ser a única que funciona corretamente em **todos** os casos de totalidade/disjunção — o custo é precisar de um `JOIN` para reunir os dados completos de uma subclasse.
+**Conclusão prática:** a **estratégia 3** (superclasse + subclasses ligadas por FK) é a mais usada no dia a dia, por ser a única que funciona corretamente em **todos** os casos de totalidade/disjunção — o custo é precisar reunir os dados completos de uma subclasse combinando as tabelas.
 
 ---
 
