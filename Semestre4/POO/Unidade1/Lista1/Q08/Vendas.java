@@ -1,3 +1,5 @@
+package Semestre4.POO.Unidade1.Lista1.Q08;
+
 import java.util.Scanner;
 
 public class Vendas {

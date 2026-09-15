@@ -1,4 +1,4 @@
-package Semestre4.POO.Unidade1.Lista1.Q5;
+package Semestre4.POO.Unidade1.Lista1.Q05;
 
 import java.util.Scanner;
 
