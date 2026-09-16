@@ -1,0 +1,7 @@
+# QUESTÃO 04 - LISTA II
+
+![alt text](image.png)
+
+Resposta:
+
+(B) 2 - 3 - 1
