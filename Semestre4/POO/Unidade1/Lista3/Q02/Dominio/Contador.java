@@ -3,7 +3,7 @@ package Semestre4.POO.Unidade1.Lista3.Q02.Dominio;
 public class Contador {
     private int cont;
 
-    private void imprimir(){
+    public void imprimir(){
         System.out.println("Contador: " + this.cont);
     }
 
