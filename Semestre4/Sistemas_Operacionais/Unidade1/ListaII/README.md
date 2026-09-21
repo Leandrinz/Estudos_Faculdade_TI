@@ -156,23 +156,18 @@ Três razões:
 
 ## D) Comparação sistemática *(2.d)*
 
-| Aspecto | 👤 **Espaço do usuário** | 🛡️ **Núcleo** |
-|---|---|---|
-| **SO sem suporte a threads** | ✅ **Possível** (só ligar a biblioteca; foi como threads surgiram) | ❌ **Impossível** (depende do núcleo) |
-| **Custo** de criar/terminar/chavear/bloquear | 🟢 **Muito baixo**: procedimento local, sem trap | 🔴 **Alto**: chamada de sistema, troca de modo, salva contexto, pode limpar cache (ainda mais barato que processo) |
-| **Chamada bloqueante** | 🔴 **Problema central**: o núcleo vê só o processo, então **bloqueia o processo inteiro** (todas as threads param, mesmo as prontas). Falta de página idem. | 🟢 **Natural**: bloqueia só **aquela thread**; o núcleo escalona outra |
-| **Preempção** entre threads | 🔴 Difícil: sem interrupção de relógio para o runtime; depende de `thread_yield` voluntário (laço infinito trava o processo) | 🟢 Natural: interrupção de relógio |
-| **Paralelismo real** (multiprocessador) | 🔴 Limitado (núcleo vê um só fluxo) | 🟢 Sim, threads em CPUs diferentes |
-| **Recursos do núcleo** | 🟢 Nenhum por thread; escala para milhares | 🔴 Entrada na tabela + pilha de kernel por thread |
+### 1. Possibilidade de uso em SOs que não suportam threads
 
-**Contornos (imperfeitos) para o bloqueio no usuário:**
-- *Jacket/wrapper* em torno da chamada;
-- `select` para testar se bloquearia antes de chamar;
-- E/S não bloqueante.
+- **Espaço do usuário:** é possível. As threads são implementadas por uma biblioteca em nível de usuário, e o núcleo enxerga apenas um processo comum. Por isso funcionam mesmo em SOs sem suporte a threads.
+- **Núcleo:** não é possível. O próprio SO precisa implementar e gerenciar as threads, então ele deve oferecer esse suporte.
+### 2. Custo computacional (criação, término, chaveamento e bloqueio)
 
-> ⚠️ Todos exigem reescrever partes da biblioteca do sistema e nem sempre são possíveis.
+- **Espaço do usuário:** custo baixo. Todas as operações são feitas pela biblioteca, com simples chamadas de procedimento, sem *trap* ao núcleo e sem troca de contexto completa. O chaveamento é muito rápido.
+- **Núcleo:** custo mais alto. Cada operação exige uma chamada de sistema (*trap*), com troca entre modo usuário e modo núcleo. O chaveamento é mais lento, embora ainda mais barato que o chaveamento entre processos.
+### 3. Facilidade para tratar chamadas bloqueantes dentro de uma thread
 
-> 🎯 **Memorize:** *Usuário = barato, mas cego (bloqueio derruba tudo). Núcleo = caro, mas esperto.*
+- **Espaço do usuário:** difícil. O núcleo desconhece as threads, então uma chamada bloqueante (por exemplo, E/S) bloqueia o processo inteiro e, com ele, todas as suas threads. É preciso recorrer a soluções paliativas, como *wrappers* que verificam antes se a chamada bloquearia (ex.: `select`).
+- **Núcleo:** fácil. Quando uma thread faz uma chamada bloqueante, o núcleo bloqueia apenas ela e pode escalonar outra thread do mesmo processo (ou de outro).
 
 ---
 
