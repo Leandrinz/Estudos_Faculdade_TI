@@ -1,80 +1,54 @@
-# Arrays e ArrayLists
+# Arrays e ArrayLists em Java
 
-## O que é uma array
-Uma array é uma estrutura que guarda **vários valores do mesmo tipo** em sequência na memória. Cada valor fica em uma posição, chamada de **índice**, e a contagem dos índices **começa em 0**.
+## 1. Array
 
-> Arrays são objetos: ficam no heap e a variável guarda uma referência para eles.
+Estrutura que guarda **vários valores do mesmo tipo** em sequência. Cada posição tem um **índice**, e a contagem **começa em 0**. Arrays são objetos: ficam no heap e a variável guarda uma referência.
 
-## Como declarar
-
-```java
-tipo[] nomeDaReferencia;   // forma mais usada
-tipo nomeDaReferencia[];   // forma alternativa (estilo C)
-```
-
-Exemplo:
+### Declaração e criação
 
 ```java
-char[] letrasDoAlfabeto;
+int[] notas;                 // declara (só cria a referência)
+notas = new int[4];          // cria a array com 4 posições
+
+int[] a = new int[1024];     // declaração + criação
+int n = 10;
+byte[] b = new byte[n];      // o tamanho pode ser uma variável
+
+int[] c = {7, 8, 10, 6};     // valores iniciais (tamanho = 4)
+String[] nomes = {"Ana", "Bruno", "Carla"};
 ```
 
-> Declarar não cria a array. Isso só cria uma referência. É preciso **inicializar** a array com `new` (ou com valores literais) antes de usá-la.
+Forma alternativa de declarar (estilo C): `int notas[];`
 
-## Arrays unidimensionais
+### Valores padrão (ao criar com `new`)
 
-### Criando com new
-
-```java
-int[] posicoesDeMemoria = new int[1024];
-
-int quantidadeNecessaria = 23324;
-byte[] vetorNumerico = new byte[quantidadeNecessaria]; // o tamanho pode ser uma variável
-```
-
-### Valores padrão
-Ao criar com `new`, todas as posições recebem um valor padrão:
-
-| Tipo | Valor padrão |
+| Tipo | Padrão |
 |---|---|
 | `int`, `byte`, `short`, `long` | `0` |
 | `double`, `float` | `0.0` |
 | `boolean` | `false` |
-| `char` | `'\u0000'` (caractere nulo) |
-| Objetos (`String`, `Funcionario`...) | `null` |
+| `char` | `'\u0000'` |
+| Objetos (`String`, etc.) | `null` |
 
-### Criando com valores iniciais
-
-```java
-int[] notas = {7, 8, 10, 6};
-String[] nomes = {"Ana", "Bruno", "Carla"};
-```
-
-O tamanho é definido automaticamente pela quantidade de valores.
-
-### Acessando a array
+### Acesso e tamanho
 
 ```java
-int[] posicoesDeMemoria = new int[1024];
-
-posicoesDeMemoria[0] = 50;                    // escrevendo no primeiro índice
-System.out.println(posicoesDeMemoria[0]);     // primeiro índice
-System.out.println(posicoesDeMemoria[1023]);  // último índice (tamanho - 1)
+int[] v = new int[5];
+v[0] = 50;                        // escreve no primeiro índice
+System.out.println(v[v.length - 1]); // último índice = tamanho - 1
+v[5] = 1;                         // ArrayIndexOutOfBoundsException
 ```
 
-> Se o índice não existir (por exemplo, `posicoesDeMemoria[1024]`), o Java lança uma `ArrayIndexOutOfBoundsException` em tempo de execução.
+- O tamanho **não pode ser alterado** depois de criada. Para "aumentar", crie outra array e copie (ver `Arrays.copyOf`) ou use `ArrayList`.
+- Cuidado com a diferença entre os três:
 
-> Não conseguimos redimensionar uma array já criada. Se precisar de mais espaço, é preciso criar uma nova array e copiar os valores (ou usar um `ArrayList`, visto mais abaixo).
+| Tipo | Tamanho |
+|---|---|
+| Array | `array.length` (atributo, sem parênteses) |
+| `String` | `texto.length()` |
+| `ArrayList` | `lista.size()` |
 
-### length
-Para pegar o tamanho de uma array:
-
-```java
-array.length;   // atenção: sem parênteses, é um atributo
-```
-
-Note a diferença: em arrays é `length`, em `String` é `length()` e em `ArrayList` é `size()`.
-
-> Muito usado em laços de repetição:
+### Percorrendo
 
 ```java
 int[] notas = {7, 8, 10, 6};
@@ -84,48 +58,81 @@ for (int i = 0; i < notas.length; i++) {
 }
 ```
 
-## Arrays de instâncias de classe
+### For aprimorado (for each)
 
-Uma array de objetos guarda **referências**. Ao criá-la, todas as posições começam como `null`, e cada objeto precisa ser criado com `new` separadamente.
-
-```java
-Funcionario[] equipe = new Funcionario[5];   // 5 posições, todas null
-equipe[2] = new Funcionario("Leandro", 874634, 23, 32, 1999, 43232);
-```
-
-> Acessar um método em uma posição ainda `null` causa `NullPointerException`.
-
-## Passando array para métodos
-
-Como arrays são objetos, o método recebe a **referência**. Por isso, alterações feitas dentro do método **afetam a array original**.
-
-### Passando o array como parâmetro
+Percorre todos os elementos sem usar índice. Lê-se: "para cada `nota` em `notas`".
 
 ```java
-double[] array = new double[5];
-modificaArray(array);
-```
-
-### Método recebendo array
-
-```java
-void modificaArray(double[] b) {
-    b[0] = 10.5;   // altera a array original
+for (int nota : notas) {
+    System.out.println(nota);
 }
 ```
 
-## Arrays multidimensionais
+Limitação: `nota` é uma **cópia** do valor. Alterá-la não muda a array. Para modificar posições, use o `for` com índice.
+
+```java
+for (int i = 0; i < notas.length; i++) {
+    notas[i] = notas[i] + 1;   // modifica de verdade
+}
+```
+
+---
+
+## 2. Array de objetos
+
+Guarda **referências**. Ao criar, todas as posições são `null`; cada objeto precisa de seu próprio `new`.
+
+```java
+Funcionario[] equipe = new Funcionario[5];        // 5 posições null
+equipe[2] = new Funcionario("Leandro", 874634, 23, 32, 1999, 43232);
+
+equipe[0].getNome();   // NullPointerException (posição 0 ainda é null)
+```
+
+---
+
+## 3. Arrays e métodos
+
+O método recebe a **referência** da array, então alterações dentro dele **afetam a array original**.
+
+```java
+void modificaArray(double[] b) {
+    b[0] = 10.5;
+}
+
+double[] array = new double[5];
+modificaArray(array);
+System.out.println(array[0]);   // 10.5
+```
+
+### Varargs (argumentos de comprimento variável)
+
+Permite receber qualquer quantidade de argumentos do mesmo tipo, com `...` após o tipo. Dentro do método, o parâmetro é uma array comum.
+
+```java
+double soma(double... numeros) {
+    double total = 0;
+    for (double n : numeros) total += n;
+    return total;
+}
+
+soma();               // 0.0
+soma(5.0);            // 5.0
+soma(1.5, 2.5, 3.0);  // 7.0
+```
+
+Regras: apenas **um** varargs por método, e ele deve ser o **último** parâmetro.
+
+---
+
+## 4. Arrays multidimensionais
 
 São "arrays de arrays". A mais comum é a bidimensional (linhas e colunas).
 
 ```java
-char[][] tabuleiro = new char[8][8];   // 8 linhas e 8 colunas
+char[][] tabuleiro = new char[8][8];   // 8 linhas, 8 colunas
 tabuleiro[5][4] = 'x';                 // linha 5, coluna 4
-```
 
-Com valores iniciais:
-
-```java
 int[][] matriz = {
     {1, 2, 3},
     {4, 5, 6}
@@ -143,89 +150,166 @@ for (int i = 0; i < matriz.length; i++) {          // linhas
 }
 ```
 
-## Arrays irregulares
+### Arrays irregulares
 
-São arrays em que cada linha pode ter uma **quantidade diferente de colunas**. Definimos só o número de linhas e depois criamos cada linha separadamente.
-
-```java
-int[][] b = new int[5][];   // 5 linhas, ainda sem colunas
-
-b[0] = new int[2];   // linha 0 com 2 colunas
-b[1] = new int[4];   // linha 1 com 4 colunas
-```
-
-## For aprimorado (for each)
-
-Percorre todos os elementos da array sem precisar de índice.
+Cada linha pode ter um número diferente de colunas. Define-se só o número de linhas e cria-se cada linha depois.
 
 ```java
-for (tipo elemento : nomeDaArray) {
-    instruções;
-}
+int[][] b = new int[3][];   // 3 linhas, sem colunas ainda
+b[0] = new int[2];
+b[1] = new int[4];
+b[2] = new int[1];
 ```
 
-Exemplo:
+---
+
+## 5. Classe `Arrays` (`java.util.Arrays`)
+
+Métodos estáticos utilitários para manipular arrays.
 
 ```java
-int[] notas = {7, 8, 10, 6};
-
-for (int nota : notas) {
-    System.out.println(nota);
-}
+import java.util.Arrays;
 ```
 
-Leia como: "para cada `nota` em `notas`".
+| Método | O que faz |
+|---|---|
+| `sort` | Ordena em ordem crescente |
+| `binarySearch` | Procura um valor e retorna o índice onde está |
+| `equals` | Compara o conteúdo de duas arrays |
+| `fill` | Preenche a array com um valor |
+| `toString` | Converte a array em texto para impressão |
+| `copyOf` | Cria uma cópia, com novo tamanho |
 
-> Não podemos fazer modificações nos elementos com o for each. A variável `nota` é uma **cópia** do valor, então alterá-la não muda a array. Para modificar posições, use o `for` tradicional com índice.
-
-## Lista de argumentos de comprimento variável (varargs)
-
-Permite criar um método que recebe **uma quantidade qualquer de argumentos** do mesmo tipo, usando `...` após o tipo.
+### sort
 
 ```java
-double soma(double... numeros) {
-    double total = 0;
-    for (double n : numeros) {
-        total += n;
-    }
-    return total;
-}
+int[] v = {5, 2, 9, 1};
+Arrays.sort(v);
+System.out.println(Arrays.toString(v));   // [1, 2, 5, 9]
 ```
 
-Chamadas possíveis:
+### binarySearch
+
+A array **precisa estar ordenada**. Retorna o índice se encontrar; se não encontrar, retorna um número negativo.
 
 ```java
-soma();               // 0 argumentos
-soma(5.0);            // 1 argumento
-soma(1.5, 2.5, 3.0);  // vários argumentos
+int[] v = {1, 2, 5, 9};
+Arrays.binarySearch(v, 5);   // 2
+Arrays.binarySearch(v, 7);   // negativo (não encontrado)
 ```
 
-Dentro do método, `numeros` se comporta como uma **array comum** (`numeros.length`, for each, etc.).
+### equals
 
-> Regras: só pode haver **um** parâmetro varargs por método, e ele deve ser o **último** da lista de parâmetros.
+`==` compara referências; `Arrays.equals` compara o **conteúdo**.
 
-## ArrayList (introdução)
+```java
+int[] x = {1, 2, 3};
+int[] y = {1, 2, 3};
+x == y;                  // false (objetos diferentes)
+Arrays.equals(x, y);     // true
+```
 
-Como vimos, uma array tem tamanho fixo. O `ArrayList` resolve isso: é uma lista que **cresce e diminui automaticamente**.
+### fill
+
+```java
+int[] v = new int[4];
+Arrays.fill(v, 7);
+System.out.println(Arrays.toString(v));   // [7, 7, 7, 7]
+```
+
+### copyOf (redimensionando)
+
+```java
+int[] v = {1, 2, 3};
+int[] maior = Arrays.copyOf(v, 5);
+System.out.println(Arrays.toString(maior));   // [1, 2, 3, 0, 0]
+```
+
+Dica: para imprimir arrays bidimensionais, use `Arrays.deepToString(matriz)`.
+
+---
+
+## 6. ArrayList
+
+Lista de **tamanho dinâmico**: cresce e diminui automaticamente. Faz parte de `java.util`.
 
 ```java
 import java.util.ArrayList;
 
-ArrayList<String> nomes = new ArrayList<>();
-
-nomes.add("Ana");                       // adiciona no final
-nomes.add("Bruno");
-System.out.println(nomes.get(0));       // acessa pelo índice -> Ana
-System.out.println(nomes.size());       // quantidade de elementos -> 2
-nomes.remove(0);                        // remove pelo índice
+ArrayList<String> itens = new ArrayList<>();
 ```
 
-Diferenças em relação à array:
+O tipo entre `< >` é obrigatório. Tipos primitivos usam classes wrapper: `ArrayList<Integer>`, `ArrayList<Double>`, `ArrayList<Boolean>`.
+
+### Métodos principais
+
+| Método | O que faz |
+|---|---|
+| `add(e)` | Adiciona ao final |
+| `add(i, e)` | Insere na posição `i` |
+| `get(i)` | Retorna o elemento da posição `i` |
+| `size()` | Quantidade de elementos |
+| `contains(e)` | `true` se o elemento existe na lista |
+| `indexOf(e)` | Índice da primeira ocorrência (`-1` se não existir) |
+| `remove(i)` / `remove(e)` | Remove por índice ou por objeto |
+| `clear()` | Remove todos os elementos |
+
+### Exemplo completo
+
+```java
+ArrayList<String> itens = new ArrayList<>();
+
+itens.add("Ana");
+itens.add("Bruno");
+itens.add("Carla");
+itens.add(1, "Daniel");                  // [Ana, Daniel, Bruno, Carla]
+
+System.out.println(itens.get(0));        // Ana
+System.out.println(itens.size());        // 4
+System.out.println(itens.contains("Bruno")); // true
+System.out.println(itens.indexOf("Carla"));  // 3
+System.out.println(itens.indexOf("Zé"));     // -1
+
+itens.remove(0);                         // remove por índice -> [Daniel, Bruno, Carla]
+itens.remove("Bruno");                   // remove por objeto -> [Daniel, Carla]
+
+itens.clear();
+System.out.println(itens.size());        // 0
+```
+
+### Percorrendo
+
+```java
+for (int i = 0; i < itens.size(); i++) {
+    System.out.println(itens.get(i));
+}
+
+for (String item : itens) {
+    System.out.println(item);
+}
+```
+
+### Atenção: `remove` em `ArrayList<Integer>`
+
+```java
+ArrayList<Integer> nums = new ArrayList<>();
+nums.add(10);
+nums.add(20);
+nums.add(30);
+
+nums.remove(1);                    // remove o ÍNDICE 1 -> [10, 30]
+nums.remove(Integer.valueOf(10));  // remove o VALOR 10 -> [30]
+```
+
+---
+
+## 7. Array x ArrayList
 
 | | Array | ArrayList |
 |---|---|---|
 | Tamanho | Fixo | Dinâmico |
 | Tamanho atual | `array.length` | `lista.size()` |
 | Acesso | `array[i]` | `lista.get(i)` |
-| Tipos primitivos | Aceita (`int[]`) | Não aceita direto, usa classes wrapper (`ArrayList<Integer>`) |
+| Atribuição | `array[i] = x` | `lista.set(i, x)` |
+| Primitivos | Aceita (`int[]`) | Só wrappers (`ArrayList<Integer>`) |
 
