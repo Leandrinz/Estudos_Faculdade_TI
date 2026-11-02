@@ -42,6 +42,193 @@ class Cachorro extends Animal {
 
 **O problema:** e se alguém escrever `new Animal()`? O que seria um "animal genérico"? Não existe um animal que seja só "animal", ele sempre é um cachorro, um gato, um pássaro... É aí que entram as **classes abstratas**.
 
+### 🛠️ Prática dos slides: Motivação – 1ª tentativa (uma classe para cada entidade)
+
+**Contexto:** você é engenheiro de uma empresa especializada em **controlar veículos remotamente**. A empresa quer um sistema capaz de controlar diferentes tipos de veículos (barcos, carros, aviões...). Vamos dividir o problema em dois: **modelagem dos veículos** e **modelagem do controle**.
+
+**Questão:** implemente as três classes abaixo, **cada uma independente das outras** (sem herança):
+
+| BARCO | CARRO | AVIAO |
+|---|---|---|
+| capacidade | capacidade | capacidade |
+| profundidade | qtdRodas | cadANAC |
+| cadBarco | placa | cadAviao |
+| `moverFrente()` | `moverFrente()` | `moverFrente()` |
+
+Depois responda: **se a empresa determinar que todos os veículos devem ter capacidade mínima igual a 10, o que precisaria ser mudado?**
+
+<details>
+<summary>👁️ Ver resposta</summary>
+
+```java
+class Barco {
+    private int capacidade;
+    private double profundidade;
+    private String cadBarco;
+
+    public Barco(int capacidade, double profundidade, String cadBarco) {
+        this.capacidade = capacidade;
+        this.profundidade = profundidade;
+        this.cadBarco = cadBarco;
+    }
+
+    public void moverFrente() {
+        System.out.println("O barco está navegando para frente");
+    }
+}
+
+class Carro {
+    private int capacidade;
+    private int qtdRodas;
+    private String placa;
+
+    public Carro(int capacidade, int qtdRodas, String placa) {
+        this.capacidade = capacidade;
+        this.qtdRodas = qtdRodas;
+        this.placa = placa;
+    }
+
+    public void moverFrente() {
+        System.out.println("O carro está andando para frente");
+    }
+}
+
+class Aviao {
+    private int capacidade;
+    private String cadANAC;
+    private String cadAviao;
+
+    public Aviao(int capacidade, String cadANAC, String cadAviao) {
+        this.capacidade = capacidade;
+        this.cadANAC = cadANAC;
+        this.cadAviao = cadAviao;
+    }
+
+    public void moverFrente() {
+        System.out.println("O avião está taxiando para frente");
+    }
+}
+```
+
+**E a capacidade mínima = 10?** Seria preciso **validar o atributo `capacidade` nos construtores e nos métodos `set` de CADA classe** (Barco, Carro, Aviao), repetindo o mesmo código três vezes. E se surgir um quarto veículo, repete de novo.
+
+**Conclusão:** a **não utilização de herança reduz o reuso de código**. Dá para melhorar!
+
+</details>
+
+### 🛠️ Prática dos slides: Motivação – 2ª tentativa (hierarquia de classes)
+
+**Questão:** reformule o projeto usando **hierarquia de classes**, conforme o slide:
+
+```
+                      VEICULO (capacidade)
+          ┌───────────────┼───────────────┐
+      AQUATICO         TERRESTRE         AEREO
+   (profundidade)      (qtdRodas)       (cadANAC)
+     ┌────┴────┐       ┌────┴────┐      ┌────┴────┐
+   BARCO     ...     CARRO     ...    AVIAO     ...
+  (cadBarco)         (placa)          (cadAviao)
+ moverFrente()      moverFrente()    moverFrente()
+```
+
+Quanto mais ao topo, mais **abstrato**; quanto mais embaixo, mais **concreto**. Coloque a validação de capacidade mínima (10) **em um único lugar**.
+
+<details>
+<summary>👁️ Ver resposta</summary>
+
+```java
+class Veiculo {
+    protected int capacidade;
+
+    public Veiculo(int capacidade) {
+        setCapacidade(capacidade);
+    }
+
+    public int getCapacidade() {
+        return capacidade;
+    }
+
+    public void setCapacidade(int capacidade) {
+        if (capacidade < 10) {
+            throw new IllegalArgumentException("Capacidade mínima é 10");
+        }
+        this.capacidade = capacidade;
+    }
+}
+
+class Aquatico extends Veiculo {
+    protected double profundidade;
+
+    public Aquatico(int capacidade, double profundidade) {
+        super(capacidade);
+        this.profundidade = profundidade;
+    }
+}
+
+class Terrestre extends Veiculo {
+    protected int qtdRodas;
+
+    public Terrestre(int capacidade, int qtdRodas) {
+        super(capacidade);
+        this.qtdRodas = qtdRodas;
+    }
+}
+
+class Aereo extends Veiculo {
+    protected String cadANAC;
+
+    public Aereo(int capacidade, String cadANAC) {
+        super(capacidade);
+        this.cadANAC = cadANAC;
+    }
+}
+
+class Barco extends Aquatico {
+    private String cadBarco;
+
+    public Barco(int capacidade, double profundidade, String cadBarco) {
+        super(capacidade, profundidade);
+        this.cadBarco = cadBarco;
+    }
+
+    public void moverFrente() {
+        System.out.println("O barco está navegando para frente");
+    }
+}
+
+class Carro extends Terrestre {
+    private String placa;
+
+    public Carro(int capacidade, int qtdRodas, String placa) {
+        super(capacidade, qtdRodas);
+        this.placa = placa;
+    }
+
+    public void moverFrente() {
+        System.out.println("O carro está andando para frente");
+    }
+}
+
+class Aviao extends Aereo {
+    private String cadAviao;
+
+    public Aviao(int capacidade, String cadANAC, String cadAviao) {
+        super(capacidade, cadANAC);
+        this.cadAviao = cadAviao;
+    }
+
+    public void moverFrente() {
+        System.out.println("O avião está taxiando para frente");
+    }
+}
+```
+
+Agora a regra "capacidade mínima 10" está **só em `Veiculo`** e vale para todos os descendentes (inclusive os que ainda vão ser criados).
+
+**Mas ainda há um problema:** nada impede `new Veiculo(50)`, e `Veiculo` não declara `moverFrente()`. Um veículo "genérico" não existe... Isso nos leva às **classes abstratas**.
+
+</details>
+
 ---
 
 ## 2. Classes abstratas
@@ -168,6 +355,101 @@ Use quando:
 - Existe um **conceito genérico** que não faz sentido instanciar sozinho (Forma, Animal, Funcionário, Veículo).
 - Você quer **compartilhar código e atributos** entre as filhas **e** forçar que elas implementem certos métodos.
 
+### 🛠️ Prática dos slides: reformular o projeto de veículos com classes abstratas
+
+**Questão:** retome a hierarquia da prática anterior (`Veiculo` → `Aquatico`/`Terrestre`/`Aereo` → `Barco`/`Carro`/`Aviao`) e **reformule-a usando classes abstratas**:
+
+1. Quais classes devem ser abstratas? Por quê?
+2. Declare `moverFrente()` como **método abstrato** em `Veiculo`.
+3. Teste: o que acontece ao escrever `new Veiculo(50)`? E ao esquecer `moverFrente()` em `Carro`?
+
+<details>
+<summary>👁️ Ver resposta</summary>
+
+**1.** `Veiculo`, `Aquatico`, `Terrestre` e `Aereo` são **conceitos genéricos** (não existe um "veículo qualquer"), então viram `abstract`. Só `Barco`, `Carro` e `Aviao` (as classes concretas) podem ser instanciadas.
+
+**2.** Só o que muda em relação à versão anterior:
+
+```java
+abstract class Veiculo {
+    protected int capacidade;
+
+    public Veiculo(int capacidade) {
+        setCapacidade(capacidade);
+    }
+
+    public int getCapacidade() {
+        return capacidade;
+    }
+
+    public void setCapacidade(int capacidade) {
+        if (capacidade < 10) {
+            throw new IllegalArgumentException("Capacidade mínima é 10");
+        }
+        this.capacidade = capacidade;
+    }
+
+    // método abstrato: toda classe concreta é obrigada a implementar
+    public abstract void moverFrente();
+}
+
+abstract class Aquatico extends Veiculo {
+    protected double profundidade;
+
+    public Aquatico(int capacidade, double profundidade) {
+        super(capacidade);
+        this.profundidade = profundidade;
+    }
+}
+
+abstract class Terrestre extends Veiculo {
+    protected int qtdRodas;
+
+    public Terrestre(int capacidade, int qtdRodas) {
+        super(capacidade);
+        this.qtdRodas = qtdRodas;
+    }
+}
+
+abstract class Aereo extends Veiculo {
+    protected String cadANAC;
+
+    public Aereo(int capacidade, String cadANAC) {
+        super(capacidade);
+        this.cadANAC = cadANAC;
+    }
+}
+```
+
+`Aquatico`, `Terrestre` e `Aereo` **não implementam** `moverFrente()`, e tudo bem: como também são `abstract`, passam a obrigação para as filhas. As classes concretas ficam iguais, mas agora com `@Override`:
+
+```java
+class Carro extends Terrestre {
+    private String placa;
+
+    public Carro(int capacidade, int qtdRodas, String placa) {
+        super(capacidade, qtdRodas);
+        this.placa = placa;
+    }
+
+    @Override
+    public void moverFrente() {
+        System.out.println("O carro está andando para frente");
+    }
+}
+// Barco e Aviao seguem o mesmo padrão (@Override em moverFrente())
+```
+
+**3.** Testes:
+
+```java
+Veiculo v = new Veiculo(50);   // ERRO de compilação: Veiculo é abstrata
+```
+
+Se `Carro` não implementar `moverFrente()`, o compilador também reclama (a menos que `Carro` seja declarada `abstract`).
+
+</details>
+
 ---
 
 ## 3. Polimorfismo
@@ -189,6 +471,45 @@ E então você pode usar uma **variável do tipo da superclasse** para guardar u
 Forma f1 = new Circulo("Vermelho", 2.0);       // OK: Círculo É UMA Forma
 Forma f2 = new Retangulo("Azul", 3.0, 4.0);    // OK: Retângulo É UMA Forma
 ```
+
+### 🛠️ Prática dos slides: Modelagem do controle – 1ª tentativa (um método para cada classe concreta)
+
+**Questão:** agora vamos modelar o **controle remoto**. Crie a classe `Controle` com **um método `controlar()` para cada classe concreta** (`Aviao`, `Barco` e `Carro`), que chama o `moverFrente()` do veículo recebido. Depois responda: **qual o problema dessa abordagem quando a empresa passar a controlar um novo tipo de veículo (ex.: `Helicoptero`)?**
+
+<details>
+<summary>👁️ Ver resposta</summary>
+
+```java
+class Controle {
+    public void controlar(Aviao a) {
+        a.moverFrente();
+    }
+
+    public void controlar(Barco b) {
+        b.moverFrente();
+    }
+
+    public void controlar(Carro c) {
+        c.moverFrente();
+    }
+}
+```
+
+```java
+public class Main {
+    public static void main(String[] args) {
+        Controle controle = new Controle();
+
+        controle.controlar(new Aviao(100, "ANAC-123", "PR-ABC"));
+        controle.controlar(new Barco(30, 5.5, "BC-001"));
+        controle.controlar(new Carro(12, 4, "ABC-1234"));
+    }
+}
+```
+
+**O problema:** a cada novo tipo de veículo (`Helicoptero`, `Moto`, `Submarino`...) é preciso **abrir a classe `Controle` e escrever mais um método `controlar()`**. O código fica repetitivo e **aberto para modificação**, e não para extensão. A solução é o **polimorfismo**, que vem a seguir.
+
+</details>
 
 ### 3.2 O poder do polimorfismo na prática
 
@@ -227,6 +548,58 @@ imprimirArea(new Retangulo("Branco", 2, 6));
 ```
 
 Um método que recebe `Forma` aceita **qualquer filha** de Forma.
+
+### 🛠️ Prática dos slides: Polimorfismo de inclusão (Controle com `Veiculo`)
+
+**Contexto:** *polimorfismo de inclusão* é a **substituição da classe mãe por seus descendentes**. A assinatura do método recebe um parâmetro da classe mãe (`Veiculo`) e, na chamada, podemos passar instâncias das classes filhas (`Aviao`, `Barco`, `Carro`).
+
+**Questão:** reescreva a classe `Controle` com **um único método** `controlar(Veiculo v)`. Teste passando um `Aviao`, um `Barco` e um `Carro`. Em seguida, crie a classe `Helicoptero` (filha de `Aereo`) e verifique se `Controle` precisa ser alterada.
+
+<details>
+<summary>👁️ Ver resposta</summary>
+
+```java
+class Controle {
+    // aceita QUALQUER descendente de Veiculo
+    public void controlar(Veiculo v) {
+        v.moverFrente();    // cada objeto executa a implementação mais próxima na hierarquia
+    }
+}
+```
+
+```java
+public class Main {
+    public static void main(String[] args) {
+        Controle controle = new Controle();
+
+        controle.controlar(new Aviao(100, "ANAC-123", "PR-ABC"));   // "O avião está taxiando..."
+        controle.controlar(new Barco(30, 5.5, "BC-001"));           // "O barco está navegando..."
+        controle.controlar(new Carro(12, 4, "ABC-1234"));           // "O carro está andando..."
+    }
+}
+```
+
+Novo veículo, **sem mexer em `Controle`**:
+
+```java
+class Helicoptero extends Aereo {
+    public Helicoptero(int capacidade, String cadANAC) {
+        super(capacidade, cadANAC);
+    }
+
+    @Override
+    public void moverFrente() {
+        System.out.println("O helicóptero está inclinando e avançando");
+    }
+}
+
+// na main:
+controle.controlar(new Helicoptero(15, "ANAC-777"));   // funciona sem nenhuma alteração em Controle!
+```
+
+**Por que funciona?** O parâmetro é do tipo `Veiculo` (upcasting automático), e, como `moverFrente()` é abstrato em `Veiculo`, a **ligação dinâmica** escolhe em tempo de execução a implementação do objeto real.
+
+</details>
 
 ### 3.4 Sem polimorfismo (o jeito ruim)
 
@@ -272,6 +645,87 @@ class Calculadora {
     int somar(int a, int b, int c)      { return a + b + c; }   // sobrecarga
 }
 ```
+
+### 🛠️ Prática dos slides: Polimorfismo de sobrecarga (segundo construtor em `Carro`)
+
+**Contexto:** ocorre quando definimos **múltiplas funções com o mesmo nome**, porém com **tipos/quantidades diferentes de parâmetros**. É uma técnica muito comum em **construtores**.
+
+**Questão:** crie um **segundo construtor** para a classe `Carro`, que receba apenas a `capacidade` e a `placa` (assumindo 4 rodas por padrão). Instancie um `Carro` com cada construtor.
+
+<details>
+<summary>👁️ Ver resposta</summary>
+
+```java
+class Carro extends Terrestre {
+    private String placa;
+
+    // Construtor 1: completo
+    public Carro(int capacidade, int qtdRodas, String placa) {
+        super(capacidade, qtdRodas);
+        this.placa = placa;
+    }
+
+    // Construtor 2: sobrecarga (menos parâmetros, 4 rodas por padrão)
+    public Carro(int capacidade, String placa) {
+        this(capacidade, 4, placa);     // reaproveita o construtor 1
+    }
+
+    @Override
+    public void moverFrente() {
+        System.out.println("O carro está andando para frente");
+    }
+}
+```
+
+```java
+Carro c1 = new Carro(5, 6, "ABC-1234");   // usa o construtor 1
+Carro c2 = new Carro(5, "XYZ-9876");      // usa o construtor 2 (4 rodas)
+```
+
+O compilador escolhe qual construtor chamar **em tempo de compilação**, olhando a quantidade e os tipos dos argumentos. O `this(...)` evita repetir código entre os construtores.
+
+</details>
+
+### 🛠️ Prática dos slides: Polimorfismo de sobreposição (`toString` em `Carro`)
+
+**Contexto:** ocorre quando **redefinimos um método da classe mãe em uma classe filha**; o método da filha se **sobrepõe**. Todas as classes em Java herdam de `Object`, e `Object` já possui uma implementação do método `toString()`.
+
+**Questão:** imprima um objeto do tipo `Carro` **sem** sobrescrever `toString()` e depois **com** a sobrescrita. Compare as saídas.
+
+<details>
+<summary>👁️ Ver resposta</summary>
+
+**Sem sobrescrever `toString()` em `Carro`:**
+
+```java
+Carro c = new Carro(5, 4, "ABC-1234");
+System.out.println(c);
+// Saída (algo como): Carro@1b6d3586
+```
+
+Usa a implementação herdada de `Object`: nome da classe + `@` + código hash (inútil para humanos).
+
+**Sobrescrevendo:**
+
+```java
+class Carro extends Terrestre {
+    // ... (restante da classe)
+
+    @Override
+    public String toString() {
+        return "Carro [placa=" + placa + ", capacidade=" + capacidade + ", rodas=" + qtdRodas + "]";
+    }
+}
+```
+
+```java
+System.out.println(c);
+// Saída: Carro [placa=ABC-1234, capacidade=5, rodas=4]
+```
+
+O `println` chama `toString()` automaticamente, e, como o objeto real é um `Carro`, a versão **sobreposta** é a executada. É a mesma ideia de `calcularArea()` em `Circulo`.
+
+</details>
 
 ---
 
@@ -414,6 +868,116 @@ class Aluno implements Comparable<Aluno> {
 ```
 
 O `sort` não sabe nada sobre `Aluno`. Ele só sabe que todo `Comparable` tem `compareTo`. Isso é polimorfismo + interface trabalhando juntos.
+
+### 🛠️ Prática dos slides: Pagamentos de funcionários e faturas (`Pagavel`)
+
+**Contexto:** uma interface é muito usada quando **classes sem relação hierárquica** precisam compartilhar métodos comuns, permitindo que objetos de classes não relacionadas sejam **processados polimorficamente**. Uma `Fatura` e um `Empregado` não têm nada em comum, mas ambos podem ser **pagos**.
+
+**Questão:** construa um aplicativo que determina os pagamentos para funcionários e também faturas, segundo o modelo:
+
+```
+              <<interface>>
+                 Pagavel
+                ▲        ▲
+                │        │
+             Fatura   Empregado (abstrata)
+                          ▲
+                          │
+                 EmpregadoAssalariado
+```
+
+- `Pagavel` deve conter um método para **obter o valor do pagamento**;
+- `Fatura` deve conter atributos para o **preço do item** e a **quantidade do item**;
+- `Empregado` deve ser uma **classe abstrata** com os atributos **nome** e **carteira de trabalho**;
+- `EmpregadoAssalariado` deve ter um atributo para o **valor do seu salário**;
+- `Fatura` e `EmpregadoAssalariado` são **classes concretas**;
+- Na classe executável, escreva um **método que recebe um objeto `Pagavel`** e imprime o custo do pagamento.
+
+<details>
+<summary>👁️ Ver resposta</summary>
+
+```java
+// Interface: o contrato
+interface Pagavel {
+    double getValorPagamento();
+}
+
+// Concreta 1: implementa a interface diretamente
+class Fatura implements Pagavel {
+    private double precoItem;
+    private int quantidade;
+
+    public Fatura(double precoItem, int quantidade) {
+        this.precoItem = precoItem;
+        this.quantidade = quantidade;
+    }
+
+    @Override
+    public double getValorPagamento() {
+        return precoItem * quantidade;
+    }
+}
+
+// Abstrata: implementa a interface, mas deixa o método para as filhas
+abstract class Empregado implements Pagavel {
+    private String nome;
+    private String carteiraTrabalho;
+
+    public Empregado(String nome, String carteiraTrabalho) {
+        this.nome = nome;
+        this.carteiraTrabalho = carteiraTrabalho;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public String getCarteiraTrabalho() {
+        return carteiraTrabalho;
+    }
+
+    // getValorPagamento() continua sem implementação: Empregado é abstrata
+}
+
+// Concreta 2: herda de Empregado e cumpre o contrato de Pagavel
+class EmpregadoAssalariado extends Empregado {
+    private double salario;
+
+    public EmpregadoAssalariado(String nome, String carteiraTrabalho, double salario) {
+        super(nome, carteiraTrabalho);
+        this.salario = salario;
+    }
+
+    @Override
+    public double getValorPagamento() {
+        return salario;
+    }
+}
+```
+
+```java
+public class Main {
+    // Recebe QUALQUER coisa que seja Pagavel
+    public static void imprimirPagamento(Pagavel p) {
+        System.out.printf("Custo do pagamento: R$ %.2f%n", p.getValorPagamento());
+    }
+
+    public static void main(String[] args) {
+        Pagavel fatura = new Fatura(25.50, 4);
+        Pagavel empregado = new EmpregadoAssalariado("Ana", "12345", 3200.00);
+
+        imprimirPagamento(fatura);       // Custo do pagamento: R$ 102,00
+        imprimirPagamento(empregado);    // Custo do pagamento: R$ 3200,00
+    }
+}
+```
+
+**O que esse exercício mostra:**
+- `Fatura` e `Empregado` **não têm relação de herança**, mas ambos "sabem ser pagos" (`Pagavel`).
+- `imprimirPagamento(Pagavel p)` trata os dois **polimorficamente**, sem saber (nem se importar) com o tipo real.
+- `Empregado` é abstrata e pode **implementar uma interface sem implementar seus métodos**, deixando essa tarefa para as filhas concretas.
+
+</details>
 
 ---
 
